@@ -1,0 +1,9 @@
+[user]
+	email = wouabelle@gmail.com
+	name = Annabelle M
+[core]
+	editor = code --wait
+[init]
+	defaultBranch = main
+[protocol "file"]
+	allow = always
