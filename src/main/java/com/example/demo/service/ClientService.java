@@ -7,15 +7,15 @@ import com.example.demo.model.Client;
 import com.example.demo.model.Conseiller;
 
 public interface ClientService {
-	 List<Client> getAllClients();
+	List<Client> getAllClients();
 
-	    Optional<Client> getClientById(Long clientId);
-	    
-	    
+	Optional<Client> getClientById(Long clientId);
 
-	    Client createClient(Client client);
+	Client createClient(Client client);
 
-	    Client updateClient(Long clientId, Client client);
+	Client updateClient(Long clientId, Client client);
 
-	    void deleteClient(Long clientId);
+	void deleteClientById(Long clientId);
+
+	boolean isClientIdExists(Long id);
 }

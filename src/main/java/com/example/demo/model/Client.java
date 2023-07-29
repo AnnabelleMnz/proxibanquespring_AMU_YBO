@@ -1,18 +1,23 @@
 package com.example.demo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class Client {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nom;
 	private String prenom;
@@ -20,12 +25,12 @@ public class Client {
 	private String cp;
 	private String ville;
 	private int telephone;
-//	
-	
-	@ManyToOne
+	@JsonIgnore
+	@ManyToOne(cascade = { CascadeType.PERSIST })
+	@JoinColumn(name = "conseiller_id")
     private Conseiller conseiller;
 	
-	@OneToMany(mappedBy = "client")
+	@OneToMany(mappedBy = "client", cascade = { CascadeType.PERSIST })
 	private List<Compte>comptes;
 	
 	
@@ -36,7 +41,7 @@ public class Client {
 		this.prenom = prenom;
 		this.adresse = adresse;
 		this.cp = cp;
-//		this.conseiller = conseiller;
+		this.comptes = new ArrayList<>(); // Initialize the cartes list here
 	}
 	
 	public Long getId() {
@@ -81,18 +86,27 @@ public class Client {
 	public void setTelephone(int telephone) {
 		this.telephone = telephone;
 	}
-//	public List<Compte> getComptes() {
-//		return comptes;
-//	}
-//	public void setComptes(List<Compte> comptes) {
-//		this.comptes = comptes;
-//	}
+	public List<Compte> getComptes() {
+		return comptes;
+	}
+	public void setComptes(List<Compte> comptes) {
+		this.comptes = comptes;
+	}
 	public Conseiller getConseiller() {
 		return conseiller;
 	}
 	public void setConseiller(Conseiller conseiller) {
 		this.conseiller = conseiller;
 	}
+	public void addCompte(Compte compte) {
+		comptes.add(compte);
+		compte.setClient(this);
+	}
+	
+	public void removeCompte(Compte compte) {
+        comptes.remove(compte);
+        compte.setClient(null);
+    }
 	
 	@Override
 	public String toString() {

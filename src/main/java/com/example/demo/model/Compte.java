@@ -1,13 +1,17 @@
 package com.example.demo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class Compte {
@@ -18,11 +22,13 @@ public class Compte {
 	private int solde;
 	private String dateOuverture;
 	
-	@ManyToOne
+	@JsonIgnore
+	@ManyToOne(cascade = {CascadeType.PERSIST})
+	@JoinColumn(name="client_id")
 	private Client client;
 
-	@OneToMany(mappedBy = "compte")
-	private List<Carte> cartes;
+	@OneToMany(mappedBy = "compte",cascade = {CascadeType.PERSIST})
+	private List<Carte> cartes= new ArrayList<>();
 	
 	public Compte() {}
 	
@@ -60,5 +66,23 @@ public class Compte {
 
 	public void setCartes(List<Carte> cartes) {
 		this.cartes = cartes;
+	}
+	
+	public void addCarte(Carte carte) {
+        cartes.add(carte);
+        carte.setCompte(this);
+    }
+	
+	public void removeCompte(Carte carte) {
+        cartes.remove(carte);
+        carte.setCompte(null);
+    }
+	
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
 	}
 }

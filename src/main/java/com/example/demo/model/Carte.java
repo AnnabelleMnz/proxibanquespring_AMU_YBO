@@ -1,10 +1,13 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class Carte {
@@ -15,12 +18,12 @@ public class Carte {
     @Id
     @GeneratedValue
     private Long id;
-    
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(cascade = { CascadeType.PERSIST })
+	@JoinColumn(name = "compte_id")
     private Compte compte;
 
     public Carte() {
-        super();
     }
 
     public Carte(Long id,TypeDeCarte typeDeCarte ) {
@@ -41,4 +44,12 @@ public class Carte {
     public void setTypeDeCarte(TypeDeCarte  typeDeCarte) {
         this.typeDeCarte = typeDeCarte;
     }
+    
+    public Compte getCompte() {
+    	return compte;
+    }
+
+	public void setCompte(Compte compte) {
+		this.compte = compte;
+	}
 }
